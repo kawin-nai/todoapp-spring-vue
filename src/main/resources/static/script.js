@@ -8,6 +8,8 @@ let app = new Vue({
     el: "#app",
     data: {
         API_URL: "http://localhost/api/todos",
+        currentPage: undefined,
+        totalPages: undefined,
         todos: [],
         isAdding: false,
         editingId: undefined,
@@ -23,13 +25,51 @@ let app = new Vue({
     },
     methods: {
         getTodos() {
-            fetch(this.API_URL)
+            fetch(this.API_URL + "?" + new URLSearchParams({
+                page: 1
+            }))
                 .then((response) => {
                     if (response.ok) {
                         return response.json();
                     }
                 })
-                .then(json => this.todos = json)
+                .then(json => {
+                    this.todos = json.content;
+                    this.currentPage = json.number + 1;
+                    this.totalPages = json.totalPages;
+                })
+                .catch((error) => console.log(error));
+        },
+        getNextTodos() {
+            fetch(this.API_URL + "?" + new URLSearchParams({
+                page: this.currentPage + 1
+            }))
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                })
+                .then(json => {
+                    this.todos = json.content;
+                    this.currentPage = json.number + 1;
+                    this.totalPages = json.totalPages;
+                })
+                .catch((error) => console.log(error));
+        },
+        getPrevTodos() {
+            fetch(this.API_URL + "?" + new URLSearchParams({
+                page: this.currentPage - 1
+            }))
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                })
+                .then(json => {
+                    this.todos = json.content;
+                    this.currentPage = json.number + 1;
+                    this.totalPages = json.totalPages;
+                })
                 .catch((error) => console.log(error));
         },
         addTodo() {
@@ -69,6 +109,19 @@ let app = new Vue({
             this.editTodoBody.text = todo.text;
             this.editTodoBody.checked = todo.checked;
         }
+    },
+    computed: {
+      nextButtonIsDisabled() {
+          return this.currentPage === undefined
+              || this.totalPages === undefined
+              || this.currentPage >= this.totalPages;
+
+      },
+      prevButtonIsDisabled() {
+        return this.currentPage === undefined
+            || this.currentPage <= 1;
+
+      }
     },
     mounted() {
         this.getTodos();
