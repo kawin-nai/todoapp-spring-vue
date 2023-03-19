@@ -24,43 +24,9 @@ let app = new Vue({
         }
     },
     methods: {
-        getCurrentTodos() {
+        getTodoAtPage(page) {
             fetch(this.API_URL + "?" + new URLSearchParams({
-                page: this.currentPage
-            }))
-                .then((response) => {
-                    if (response.ok) {
-                        return response.json();
-                    }
-                })
-                .then(json => {
-                    this.todos = json.content;
-                    this.currentPage = json.number + 1;
-                    this.totalPages = json.totalPages;
-                    console.log(this.currentPage);
-                })
-                .catch((error) => console.log(error));
-        },
-        getNextTodos() {
-            fetch(this.API_URL + "?" + new URLSearchParams({
-                page: this.currentPage + 1
-            }))
-                .then((response) => {
-                    if (response.ok) {
-                        return response.json();
-                    }
-                })
-                .then(json => {
-                    this.todos = json.content;
-                    this.currentPage = json.number + 1;
-                    this.totalPages = json.totalPages;
-                    console.log(this.currentPage);
-                })
-                .catch((error) => console.log(error));
-        },
-        getPrevTodos() {
-            fetch(this.API_URL + "?" + new URLSearchParams({
-                page: this.currentPage - 1
+                page: page
             }))
                 .then((response) => {
                     if (response.ok) {
@@ -86,7 +52,7 @@ let app = new Vue({
                 body: JSON.stringify(this.addTodoBody)
             })
                 .then(this.modifyAdd)
-                .then(this.getCurrentTodos);
+                .then(() => this.getTodoAtPage(this.currentPage));
         },
         modifyAdd() {
             this.isAdding = !this.isAdding;
@@ -103,14 +69,29 @@ let app = new Vue({
                 },
                 body: JSON.stringify(this.editTodoBody)
             })
-                .then((res) => this.editingId = undefined)
-                .then(this.getCurrentTodos);
+                .then(() => this.editingId = undefined)
+                .then(() => this.getTodoAtPage(this.currentPage));
         },
         modifyEdit(todo) {
             this.editingId = todo.id;
             this.editTodoBody.id = todo.id;
             this.editTodoBody.text = todo.text;
             this.editTodoBody.checked = todo.checked;
+        },
+        deleteTodo(todo) {
+            fetch(this.API_URL + `/delete/${todo.id}`, {
+                method: "DELETE",
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                })
+                .then(json => {
+                    this.totalPages = json;
+                    console.log(this.currentPage, this.totalPages, Math.min(this.currentPage, this.totalPages));
+                })
+                .then(() => this.getTodoAtPage(Math.min(this.currentPage, this.totalPages)));
         }
     },
     computed: {
@@ -128,6 +109,6 @@ let app = new Vue({
     },
     mounted() {
         this.currentPage = 1;
-        this.getCurrentTodos();
+        this.getTodoAtPage(this.currentPage);
     }
 })

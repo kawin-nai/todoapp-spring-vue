@@ -35,7 +35,9 @@ public class TodoService {
         todoRepository.save(todo);
     }
 
-    public void deleteTodoById(Long id) {
+    public long deleteTodoById(Long id) {
+        int PAGE_SIZE = 5;
         todoRepository.deleteById(id);
+        return (todoRepository.count() - 1) / PAGE_SIZE + 1;
     }
 }
