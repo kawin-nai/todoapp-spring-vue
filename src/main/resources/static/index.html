@@ -2,9 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Todo App</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="app">
+        <div class="main-card">
+            <div class="todo-header">
+                <h1>Todos</h1>
+                <button @click="modifyAdd">Add</button>
+            </div>
+            <form @submit.prevent="addTodo" v-if="isAdding === true">
+                <input type="text" required v-model="addTodoBody.text"/>
+                <input type="submit" style="visibility: hidden;" />
+            </form>
+            <div class="todo-body">
+                <ul>
+                    <li v-for="todo in todos">
+                        <div class="todo-item">
+                            <form @submit.prevent="editTodo" v-if="editingId==todo.id">
+                                <input type="text" required v-model="editTodoBody.text" />
+                                <input type="submit" style="visibility: hidden;" />
+                            </form>
 
+                            <span v-else>{{todo.text}}</span>
+
+                            <button @click="modifyEdit(todo)">Edit</button>
+                            <button>Delete</button>
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
