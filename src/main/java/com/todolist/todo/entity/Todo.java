@@ -10,6 +10,14 @@ public class Todo {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    public Todo(String text, Boolean checked) {
+        this.text = text;
+        this.checked = checked;
+    }
+
+    public Todo() {
+    }
+
     public String getText() {
         return text;
     }
