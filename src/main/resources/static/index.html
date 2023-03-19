@@ -17,27 +17,25 @@
                 <input type="text" required v-model="addTodoBody.text"/>
                 <input type="submit" style="visibility: hidden;" />
             </form>
-            <div class="todo-body">
-                <ul>
-                    <li v-for="todo in todos">
-                        <div class="todo-item">
-                            <form @submit.prevent="editTodo" v-if="editingId==todo.id">
-                                <input type="text" required v-model="editTodoBody.text" />
-                                <input type="submit" style="visibility: hidden;" />
-                            </form>
+            <table class="todo-body">
+                <tr v-for="todo in todos">
+                    <td>
+                        <form @submit.prevent="editTodo" v-if="editingId==todo.id">
+                            <input type="text" required v-model="editTodoBody.text" />
+                            <input type="submit" style="visibility: hidden;" />
+                        </form>
 
-                            <span v-else>{{todo.text}}</span>
-
-                            <button @click="modifyEdit(todo)">Edit</button>
-                            <button>Delete</button>
-                        </div>
-
-                    </li>
-                </ul>
-            </div>
+                        <span v-else>{{todo.text}}</span>
+                    </td>
+                    <td>
+                        <button @click="modifyEdit(todo)">Edit</button>
+                        <button @click="deleteTodo(todo)">Delete</button>
+                    </td>
+                </tr>
+            </table>
             <div class="navigation-buttons">
-                <button @click="getPrevTodos" :disabled="prevButtonIsDisabled">Prev</button>
-                <button @click="getNextTodos" :disabled="nextButtonIsDisabled">Next</button>
+                <button @click="() => getTodoAtPage(currentPage-1)" :disabled="prevButtonIsDisabled">Prev</button>
+                <button @click="() => getTodoAtPage(currentPage+1)" :disabled="nextButtonIsDisabled">Next</button>
             </div>
         </div>
     </div>
