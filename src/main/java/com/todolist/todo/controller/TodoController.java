@@ -18,16 +18,16 @@ public class TodoController {
     }
 
     private final TodoService todoService;
-    private final int PAGE_SIZE = 5;
 
     @GetMapping()
     private List<Todo> getAllTodos() {
         return todoService.findAll();
     }
 
-    @GetMapping()
-    private Page<Todo> getTodoByPageNumber(@RequestParam int pageNumber) {
-        return todoService.findTodosByPageNumber(pageNumber, PAGE_SIZE);
+    @GetMapping(params = {"page"})
+    private Page<Todo> getTodosByPageNumber(@RequestParam int page) {
+        int PAGE_SIZE = 5;
+        return todoService.findTodosByPageNumber(page - 1, PAGE_SIZE);
     }
 
     @PostMapping("/create")
