@@ -15,9 +15,21 @@ public class TodoService {
         this.todoRepository = todoRepository;
     }
 
-    private TodoRepository todoRepository;
+    private final TodoRepository todoRepository;
     
-    private List<Todo> findAll() {
+    public List<Todo> findAll() {
         return todoRepository.findAll(); 
+    }
+
+    public void updateTodoById(Long id, Todo todo) {
+        todoRepository.updateIdAndTextAndCheckedById(todo.getId(), todo.getText(), todo.getChecked(), id);
+    }
+
+    public void createTodo(Todo todo) {
+        todoRepository.save(todo);
+    }
+
+    public void deleteTodoById(Long id) {
+        todoRepository.deleteById(id);
     }
 }
