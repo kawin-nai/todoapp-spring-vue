@@ -24,9 +24,9 @@ let app = new Vue({
         }
     },
     methods: {
-        getTodos() {
+        getCurrentTodos() {
             fetch(this.API_URL + "?" + new URLSearchParams({
-                page: 1
+                page: this.currentPage
             }))
                 .then((response) => {
                     if (response.ok) {
@@ -37,6 +37,7 @@ let app = new Vue({
                     this.todos = json.content;
                     this.currentPage = json.number + 1;
                     this.totalPages = json.totalPages;
+                    console.log(this.currentPage);
                 })
                 .catch((error) => console.log(error));
         },
@@ -53,6 +54,7 @@ let app = new Vue({
                     this.todos = json.content;
                     this.currentPage = json.number + 1;
                     this.totalPages = json.totalPages;
+                    console.log(this.currentPage);
                 })
                 .catch((error) => console.log(error));
         },
@@ -69,6 +71,7 @@ let app = new Vue({
                     this.todos = json.content;
                     this.currentPage = json.number + 1;
                     this.totalPages = json.totalPages;
+                    console.log(this.currentPage);
                 })
                 .catch((error) => console.log(error));
         },
@@ -83,7 +86,7 @@ let app = new Vue({
                 body: JSON.stringify(this.addTodoBody)
             })
                 .then(this.modifyAdd)
-                .then(this.getTodos);
+                .then(this.getCurrentTodos);
         },
         modifyAdd() {
             this.isAdding = !this.isAdding;
@@ -101,7 +104,7 @@ let app = new Vue({
                 body: JSON.stringify(this.editTodoBody)
             })
                 .then((res) => this.editingId = undefined)
-                .then(this.getTodos);
+                .then(this.getCurrentTodos);
         },
         modifyEdit(todo) {
             this.editingId = todo.id;
@@ -124,6 +127,7 @@ let app = new Vue({
       }
     },
     mounted() {
-        this.getTodos();
+        this.currentPage = 1;
+        this.getCurrentTodos();
     }
 })
