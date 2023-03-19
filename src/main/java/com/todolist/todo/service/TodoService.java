@@ -3,6 +3,8 @@ package com.todolist.todo.service;
 import com.todolist.todo.entity.Todo;
 import com.todolist.todo.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +21,10 @@ public class TodoService {
     
     public List<Todo> findAll() {
         return todoRepository.findAll(); 
+    }
+    
+    public Page<Todo> findTodosByPageNumber(int pageNumber, int pageSize) {
+        return todoRepository.findAll(PageRequest.of(pageNumber, pageSize));
     }
 
     public void updateTodoById(Long id, Todo todo) {
