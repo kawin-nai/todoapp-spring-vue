@@ -11,6 +11,7 @@ let app = new Vue({
         currentPage: undefined,
         totalPages: undefined,
         todos: [],
+        filtered: false,
         isAdding: false,
         editingId: undefined,
         addTodoBody: {
@@ -51,7 +52,7 @@ let app = new Vue({
                 },
                 body: JSON.stringify(this.addTodoBody)
             })
-                .then(this.modifyAdd)
+                .then(() => this.addTodoBody.text = undefined)
                 .then(() => this.getTodoAtPage(this.currentPage));
         },
         modifyAdd() {
@@ -92,6 +93,20 @@ let app = new Vue({
                     console.log(this.currentPage, this.totalPages, Math.min(this.currentPage, this.totalPages));
                 })
                 .then(() => this.getTodoAtPage(Math.min(this.currentPage, this.totalPages)));
+        },
+        handleChecked(todo) {
+            todo.checked = !todo.checked;
+            fetch(this.API_URL + `/update/${todo.id}`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(todo)
+            })
+        },
+        toggleFilter() {
+            this.filtered = !this.filtered;
+
         }
     },
     computed: {
@@ -105,6 +120,12 @@ let app = new Vue({
         return this.currentPage === undefined
             || this.currentPage <= 1;
 
+      },
+      actualTodos() {
+        if (this.filtered) {
+            return this.todos.filter(todo => !todo.checked);
+        }
+        return this.todos;
       }
     },
     mounted() {

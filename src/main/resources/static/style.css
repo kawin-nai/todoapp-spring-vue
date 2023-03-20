@@ -51,3 +51,39 @@ li {
 td {
     padding: 3px 0;
 }
+
+hr {
+    margin:  5px 0;
+}
+
+button {
+    cursor: pointer;
+}
+
+.done {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+
+.edit-buttons {
+    text-align: end;
+}
+
+.text-content {
+    overflow: hidden;
+}
+
+.navigation-buttons {
+    align-self: center;
+    display: flex;
+}
+
+.nav-button {
+    background: transparent;
+    border-style: none;
+}
+
+.nav-button [disabled] {
+    opacity: 0.5;
+    cursor: auto;
+}

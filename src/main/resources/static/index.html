@@ -10,32 +10,44 @@
     <div id="app">
         <div class="main-card">
             <div class="todo-header">
-                <h1>Todos</h1>
-                <button @click="modifyAdd">Add</button>
+                <h1>Todo</h1>
+                <div>
+                    <input type="checkbox" @change="toggleFilter" :checked="filtered" id="only-checked">
+                    <label for="only-checked">Not Done</label>
+                </div>
             </div>
-            <form @submit.prevent="addTodo" v-if="isAdding === true">
+            <form @submit.prevent="addTodo">
                 <input type="text" required v-model="addTodoBody.text"/>
                 <input type="submit" style="visibility: hidden;" />
+                <button @click="modifyAdd">Add</button>
+                <hr/>
             </form>
             <table class="todo-body">
-                <tr v-for="todo in todos">
+                <tr v-for="todo in actualTodos">
                     <td>
                         <form @submit.prevent="editTodo" v-if="editingId==todo.id">
                             <input type="text" required v-model="editTodoBody.text" />
                             <input type="submit" style="visibility: hidden;" />
                         </form>
 
-                        <span v-else>{{todo.text}}</span>
+                        <span v-else>
+                            <input type="checkbox" :id="todo.id" @change="handleChecked(todo)" :checked="todo.checked">
+                            <label class="text-content" for="todo.id" :class="{'done': todo.checked, 'test': todo.checked}">{{todo.text}}</label>
+                        </span>
                     </td>
-                    <td>
+                    <td class="edit-buttons">
                         <button @click="modifyEdit(todo)">Edit</button>
                         <button @click="deleteTodo(todo)">Delete</button>
                     </td>
                 </tr>
             </table>
             <div class="navigation-buttons">
-                <button @click="() => getTodoAtPage(currentPage-1)" :disabled="prevButtonIsDisabled">Prev</button>
-                <button @click="() => getTodoAtPage(currentPage+1)" :disabled="nextButtonIsDisabled">Next</button>
+                <button class="nav-button" @click="() => getTodoAtPage(currentPage-1)" :disabled="prevButtonIsDisabled">
+                    <img width="50" height="50" src="back_arrow_icon.svg" alt="Prev">
+                </button>
+                <button class="nav-button" @click="() => getTodoAtPage(currentPage+1)" :disabled="nextButtonIsDisabled">
+                    <img width="50" height="50" src="forward_arrow_icon.svg" alt="Next">
+                </button>
             </div>
         </div>
     </div>
