@@ -6,6 +6,10 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * @author Naipongprasit Kawin 55876098
+ * A repository that interacts with the H2 database
+ */
 public interface TodoRepository extends JpaRepository<Todo, Long> {
     @Transactional
     @Modifying

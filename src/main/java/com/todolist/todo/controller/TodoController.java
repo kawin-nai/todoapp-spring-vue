@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * @author Naipongprasit Kawin 55876098
+ * A RESTful controller that handles incoming API request
+ */
 @RestController
 @RequestMapping("/api/todos")
 public class TodoController {

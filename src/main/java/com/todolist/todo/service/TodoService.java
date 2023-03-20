@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * @author Naipongprasit Kawin 55876098
+ * A service that handles the business logic of the API
+ */
 @Service
 public class TodoService {
 

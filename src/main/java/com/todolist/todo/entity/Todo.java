@@ -2,6 +2,10 @@ package com.todolist.todo.entity;
 
 import jakarta.persistence.*;
 
+/**
+ * @author Naipongprasit Kawin 55876098
+ * An entity for an individual todolist item
+ */
 @Entity
 @Table(name = "todos")
 public class Todo {
