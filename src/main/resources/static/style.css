@@ -83,7 +83,7 @@ button {
     border-style: none;
 }
 
-.nav-button [disabled] {
+button.nav-button[disabled] {
     opacity: 0.5;
     cursor: auto;
 }
