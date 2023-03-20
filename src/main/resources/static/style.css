@@ -87,3 +87,13 @@ button.nav-button[disabled] {
     opacity: 0.5;
     cursor: auto;
 }
+
+.page-num-button {
+    opacity: 0.5;
+    margin: 0 5px;
+}
+
+.current-page {
+    text-decoration: underline;
+    opacity: 1;
+}

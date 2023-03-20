@@ -126,6 +126,13 @@ let app = new Vue({
             return this.todos.filter(todo => !todo.checked);
         }
         return this.todos;
+      },
+      totalPagesAsList() {
+        const list = [];
+        for (let i = 1; i <= this.totalPages; ++i) {
+            list.push(i);
+        }
+        return list;
       }
     },
     mounted() {

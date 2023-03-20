@@ -45,6 +45,9 @@
                 <button class="nav-button" @click="() => getTodoAtPage(currentPage-1)" :disabled="prevButtonIsDisabled">
                     <img width="30" height="30" src="back_arrow_icon.svg" alt="Prev">
                 </button>
+                <button :class="[{'current-page': pageNum==currentPage}, 'page-num-button', 'nav-button']" v-for="pageNum in totalPagesAsList"  @click="() => getTodoAtPage(pageNum)">
+                    {{pageNum}}
+                </button>
                 <button class="nav-button" @click="() => getTodoAtPage(currentPage+1)" :disabled="nextButtonIsDisabled">
                     <img width="30" height="30" src="forward_arrow_icon.svg" alt="Next">
                 </button>
