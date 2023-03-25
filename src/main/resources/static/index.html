@@ -32,12 +32,16 @@
 
                         <span v-else>
                             <input type="checkbox" :id="todo.id" @change="handleChecked(todo)" :checked="todo.checked">
-                            <label class="text-content" for="todo.id" :class="{'done': todo.checked, 'test': todo.checked}">{{todo.text}}</label>
+                            <label class="text-content" for="todo.id" :class="{'done': todo.checked}">{{todo.text}}</label>
                         </span>
                     </td>
                     <td class="edit-buttons">
-                        <button @click="modifyEdit(todo)">Edit</button>
-                        <button @click="deleteTodo(todo)">Delete</button>
+                        <button class="nav-button" @click="modifyEdit(todo)">
+                            <img width="20" height="20" src="edit-icon.svg">
+                        </button>
+                        <button class="nav-button" @click="deleteTodo(todo)">
+                            <img width="20" height="20" src="delete-icon.svg">
+                        </button>
                     </td>
                 </tr>
             </table>
