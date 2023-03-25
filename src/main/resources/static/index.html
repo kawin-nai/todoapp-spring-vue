@@ -19,11 +19,13 @@
             <form @submit.prevent="addTodo">
                 <input type="text" required v-model="addTodoBody.text"/>
                 <input type="submit" style="visibility: hidden;" />
-                <button @click="modifyAdd">Add</button>
+                <input type="submit" value="Add" />
+                <span v-if="isOnline">Online</span>
+                <span v-else>Offline</span>
                 <hr/>
             </form>
             <table class="todo-body">
-                <tr v-for="todo in actualTodos">
+                <tr v-for="todo in uncheckedTodos">
                     <td>
                         <form @submit.prevent="editTodo" v-if="editingId==todo.id">
                             <input type="text" required v-model="editTodoBody.text" />

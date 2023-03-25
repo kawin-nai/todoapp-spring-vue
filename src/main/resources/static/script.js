@@ -1,6 +1,3 @@
-// TODO: Limit to 5 per page and next/prev button
-// TODO: Add checked/unchecked
-// TODO: Add styling
 // TODO: Add localStorage support and synchronize to DB
 // TODO: Implement auth
 
@@ -22,7 +19,8 @@ let app = new Vue({
             "id": undefined,
             "text": undefined,
             "checked": undefined
-        }
+        },
+        isOnline: false
     },
     methods: {
         getTodoAtPage(page) {
@@ -39,8 +37,10 @@ let app = new Vue({
                     this.currentPage = json.number + 1;
                     this.totalPages = json.totalPages;
                     console.log(this.currentPage);
+                    this.saveToLocalStorage()
                 })
                 .catch((error) => console.log(error));
+
         },
         addTodo() {
             if (this.addTodoBody.text === undefined)
@@ -54,10 +54,6 @@ let app = new Vue({
             })
                 .then(() => this.addTodoBody.text = undefined)
                 .then(() => this.getTodoAtPage(this.currentPage));
-        },
-        modifyAdd() {
-            this.isAdding = !this.isAdding;
-            this.addTodoBody.text = undefined;
         },
         editTodo() {
             if (this.editTodoBody.text === undefined)
@@ -102,11 +98,24 @@ let app = new Vue({
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(todo)
-            })
+            }).then (this.saveToLocalStorage)
         },
         toggleFilter() {
             this.filtered = !this.filtered;
-
+        },
+        saveToLocalStorage() {
+          localStorage.setItem("todos", JSON.stringify(this.todos));
+        },
+        checkApi() {
+            console.log('API checked')
+            fetch(this.API_URL + "/active")
+                .then(response => {
+                    this.isOnline = response.ok;
+                })
+                .catch(error => {
+                    console.error(error);
+                    this.isOnline = false;
+                })
         }
     },
     computed: {
@@ -121,7 +130,7 @@ let app = new Vue({
             || this.currentPage <= 1;
 
       },
-      actualTodos() {
+      uncheckedTodos() {
         if (this.filtered) {
             return this.todos.filter(todo => !todo.checked);
         }
@@ -138,5 +147,6 @@ let app = new Vue({
     mounted() {
         this.currentPage = 1;
         this.getTodoAtPage(this.currentPage);
+        setInterval(this.checkApi, 1000);
     }
 })

@@ -23,6 +23,11 @@ public class TodoController {
 
     private final TodoService todoService;
 
+    @GetMapping("/active")
+    private String getActive() {
+        return "active";
+    }
+
     @GetMapping()
     private List<Todo> getAllTodos() {
         return todoService.findAll();
