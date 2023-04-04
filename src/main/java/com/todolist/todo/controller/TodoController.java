@@ -22,7 +22,7 @@ public class TodoController {
     }
 
     private final TodoService todoService;
-
+    private final int PAGE_SIZE = 5;
     @GetMapping("/active")
     private String getActive() {
         return "active";
@@ -35,8 +35,12 @@ public class TodoController {
 
     @GetMapping(params = {"page"})
     private Page<Todo> getTodosByPageNumber(@RequestParam int page) {
-        int PAGE_SIZE = 5;
         return todoService.findTodosByPageNumber(page - 1, PAGE_SIZE);
+    }
+
+    @GetMapping(path="/unchecked", params = {"page"})
+    private Page<Todo> getUncheckedTodosByPageNumber(@RequestParam int page) {
+        return todoService.findUncheckedTodosByPageNumber(page-1, PAGE_SIZE);
     }
 
     @PostMapping("/create")
@@ -45,8 +49,8 @@ public class TodoController {
     }
 
     @PutMapping("/update/{id}")
-    private void updateTodoById(@PathVariable Long id, @RequestBody Todo todo) {
-        todoService.updateTodoById(id, todo);
+    private long updateTodoById(@PathVariable Long id, @RequestBody Todo todo) {
+        return todoService.updateTodoById(id, todo);
     }
 
     @DeleteMapping("/delete/{id}")

@@ -25,7 +25,7 @@
                 <hr/>
             </form>
             <table class="todo-body">
-                <tr v-for="todo in uncheckedTodos">
+                <tr v-for="todo in todos">
                     <td>
                         <form @submit.prevent="editTodo" v-if="editingId==todo.id">
                             <input type="text" required v-model="editTodoBody.text" />

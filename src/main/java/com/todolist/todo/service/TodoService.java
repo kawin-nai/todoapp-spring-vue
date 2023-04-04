@@ -22,6 +22,7 @@ public class TodoService {
     }
 
     private final TodoRepository todoRepository;
+    private final int PAGE_SIZE = 5;
     
     public List<Todo> findAll() {
         return todoRepository.findAll(); 
@@ -31,8 +32,14 @@ public class TodoService {
         return todoRepository.findAll(PageRequest.of(pageNumber, pageSize));
     }
 
-    public void updateTodoById(Long id, Todo todo) {
+    public Page<Todo> findUncheckedTodosByPageNumber(int pageNumber, int pageSize) {
+        return todoRepository.findByChecked(false, PageRequest.of(pageNumber, pageSize));
+    }
+
+    public int updateTodoById(Long id, Todo todo) {
         todoRepository.updateIdAndTextAndCheckedById(todo.getId(), todo.getText(), todo.getChecked(), id);
+        int countUnchecked = todoRepository.findByChecked(false).size();
+        return (countUnchecked - 1) / PAGE_SIZE + 1;
     }
 
     public void createTodo(Todo todo) {
@@ -40,7 +47,7 @@ public class TodoService {
     }
 
     public long deleteTodoById(Long id) {
-        int PAGE_SIZE = 5;
+
         todoRepository.deleteById(id);
         return (todoRepository.count() - 1) / PAGE_SIZE + 1;
     }

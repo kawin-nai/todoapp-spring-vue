@@ -14,6 +14,12 @@ public class Todo {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name = "text", nullable = false)
+    private String text;
+
+    @Column(name = "checked", nullable = false)
+    private Boolean checked;
+
     public Todo(String text, Boolean checked) {
         this.text = text;
         this.checked = checked;
@@ -38,11 +44,7 @@ public class Todo {
         this.checked = checked;
     }
 
-    @Column(name = "text", nullable = false)
-    private String text;
 
-    @Column(name = "checked", nullable = false)
-    private Boolean checked;
 
     public Long getId() {
         return id;

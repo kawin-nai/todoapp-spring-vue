@@ -24,7 +24,11 @@ let app = new Vue({
     },
     methods: {
         getTodoAtPage(page) {
-            fetch(this.API_URL + "?" + new URLSearchParams({
+            let url = this.API_URL;
+            if (this.filtered === true) {
+                url += "/unchecked";
+            }
+            fetch(url + "?" + new URLSearchParams({
                 page: page
             }))
                 .then((response) => {
@@ -58,7 +62,7 @@ let app = new Vue({
         editTodo() {
             if (this.editTodoBody.text === undefined)
                 return;
-            console.log(this.editingId);
+            console.log(this.editingId + "test");
             fetch(this.API_URL + `/update/${this.editingId}`, {
                 method: "PUT",
                 headers: {
@@ -66,8 +70,13 @@ let app = new Vue({
                 },
                 body: JSON.stringify(this.editTodoBody)
             })
-                .then(() => this.editingId = undefined)
-                .then(() => this.getTodoAtPage(this.currentPage));
+                .then(() => {
+                    let editedTodo = this.todos.find((td) => td.id === this.editingId)
+                    let todoIndex = this.todos.indexOf(editedTodo);
+                    Vue.set(this.todos, todoIndex, this.editTodoBody);
+                    console.log(editedTodo, this.editTodoBody);
+                })
+                .then(() => this.editingId = undefined);
         },
         modifyEdit(todo) {
             this.editingId = todo.id;
@@ -84,11 +93,11 @@ let app = new Vue({
                         return response.json();
                     }
                 })
-                .then(json => {
-                    this.totalPages = json;
+                .then(totalPage => {
+                    this.totalPages = totalPage;
                     console.log(this.currentPage, this.totalPages, Math.min(this.currentPage, this.totalPages));
                 })
-                .then(() => this.getTodoAtPage(Math.min(this.currentPage, this.totalPages)));
+                .then(() => this.getTodoAtPage(Math.min(this.totalPages, this.currentPage)));
         },
         handleChecked(todo) {
             todo.checked = !todo.checked;
@@ -98,10 +107,18 @@ let app = new Vue({
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(todo)
-            }).then (this.saveToLocalStorage)
+            }).then (response => {
+                if (response.ok)
+                    return response.json();
+            })
+                .then (totalPage => {
+                this.totalPages = totalPage;
+            })
+                .then(() => this.getTodoAtPage(Math.min(this.totalPages, this.currentPage)));
         },
         toggleFilter() {
             this.filtered = !this.filtered;
+            this.getTodoAtPage(this.currentPage)
         },
         saveToLocalStorage() {
           localStorage.setItem("todos", JSON.stringify(this.todos));
@@ -129,12 +146,6 @@ let app = new Vue({
         return this.currentPage === undefined
             || this.currentPage <= 1;
 
-      },
-      uncheckedTodos() {
-        if (this.filtered) {
-            return this.todos.filter(todo => !todo.checked);
-        }
-        return this.todos;
       },
       totalPagesAsList() {
         const list = [];

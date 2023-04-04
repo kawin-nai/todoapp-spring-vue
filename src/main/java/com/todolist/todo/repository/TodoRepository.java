@@ -1,10 +1,14 @@
 package com.todolist.todo.repository;
 
 import com.todolist.todo.entity.Todo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author Naipongprasit Kawin 55876098
@@ -18,4 +22,8 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
 
     @Override
     void deleteById(Long aLong);
+
+    Page<Todo> findByChecked(boolean checked, PageRequest of);
+
+    List<Todo> findByChecked(boolean checked);
 }
